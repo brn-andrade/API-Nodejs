@@ -10,14 +10,28 @@ class UsersRouter extends ModelRouter<User> {
             document.password = undefined;
         });
     }
+
+    findByEmail = (req, res, next) => {
+        if (req.query.email) {
+            User.findByEmail(req.query.email)
+                .then(user => user ? [user] : [])
+                .then(this.renderAll(res, next))
+                .catch(next)
+        } else {
+            next();
+        }
+    }
     applyRoutes(application: restify.Server) {
 
-        application.get('/users', this.findAll);
+        application.get('/users', restify.plugins.conditionalHandler([
+            { version: '1.0.0', handler: this.findAll },
+            { version: '2.0.0', handler: [this.findByEmail, this.findAll] }
+        ]));
         application.get('/users/:id', [this.validateId, this.findById]);
         application.post('/users', this.save);
         application.put('/users/:id', [this.validateId, this.replace]);
         application.patch('/users/:id', [this.validateId, this.update]);
-        application.del('/users/:id', [this.validateId, this.delete])
+        application.del('/users/:id', [this.validateId, this.delete]);
     }
 }
 

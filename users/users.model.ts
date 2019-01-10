@@ -11,6 +11,10 @@ export interface User extends mongoose.Document {
     cpf: string;
 }
 
+export interface UserModel extends mongoose.Model<User> {
+    findByEmail(email: string): Promise<User>
+}
+
 const userSchema = new mongoose.Schema({
     name: {
         type: String,
@@ -44,6 +48,10 @@ const userSchema = new mongoose.Schema({
     }
 });
 
+userSchema.statics.findByEmail = function (email: string) {
+    return this.findOne({ email }); //ES6 { email: email }
+}
+
 //Middlewares
 
 const hashPassword = (obj, next) => {
@@ -70,7 +78,7 @@ const updateMiddleware = function (next) {
     }
 }
 userSchema.pre('save', saveMiddleware);
-userSchema.pre('findOneAndUpdate',  updateMiddleware);
-userSchema.pre('update',  updateMiddleware);
+userSchema.pre('findOneAndUpdate', updateMiddleware);
+userSchema.pre('update', updateMiddleware);
 
-export const User = mongoose.model<User>('User', userSchema);
+export const User = mongoose.model<User, UserModel>('User', userSchema);
