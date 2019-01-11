@@ -12,7 +12,7 @@ export interface User extends mongoose.Document {
 }
 
 export interface UserModel extends mongoose.Model<User> {
-    findByEmail(email: string): Promise<User>
+    findByEmail(email: string): Promise<User>;
 }
 
 const userSchema = new mongoose.Schema({
@@ -50,7 +50,7 @@ const userSchema = new mongoose.Schema({
 
 userSchema.statics.findByEmail = function (email: string) {
     return this.findOne({ email }); //ES6 { email: email }
-}
+};
 
 //Middlewares
 
@@ -60,7 +60,7 @@ const hashPassword = (obj, next) => {
             obj.password = hash;
             next();
         }).catch(next);
-}
+};
 
 const saveMiddleware = function (next) {
     const user: User = this;
@@ -69,14 +69,16 @@ const saveMiddleware = function (next) {
     } else {
         hashPassword(user, next);
     }
-}
+};
+
 const updateMiddleware = function (next) {
     if (!this.getUpdate().password) {
         next();
     } else {
         hashPassword(this.getUpdate(), next);
     }
-}
+};
+
 userSchema.pre('save', saveMiddleware);
 userSchema.pre('findOneAndUpdate', updateMiddleware);
 userSchema.pre('update', updateMiddleware);
