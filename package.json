@@ -4,7 +4,7 @@
   "description": "API projeto meat",
   "main": "index.js",
   "scripts": {
-    "test": "ts-node jest.startup.ts --forceExit --detectOpenHandles",
+    "test": "ts-node test/jest.startup.ts --forceExit --detectOpenHandles",
     "node": "node dist/main.js",
     "dev": "nodemon -w dist dist/main.js"
   },
