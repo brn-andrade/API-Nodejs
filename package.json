@@ -4,22 +4,49 @@
   "description": "API projeto meat",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "node": "node dist/main.js"
+    "test": "ts-node jest.startup.ts --forceExit --detectOpenHandles",
+    "node": "node dist/main.js",
+    "dev": "nodemon -w dist dist/main.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
+  "jest": {
+    "globals": {
+      "url": "http://localhost:3001"
+    },
+    "testEnvironment": "node",
+    "transform": {
+      "^.+\\.tsx?$": "ts-jest"
+    },
+    "testRegex": "(/__tests__/.*|(\\.|/)(test|spec))\\.(jsx?|tsx?)$",
+    "moduleFileExtensions": [
+      "ts",
+      "tsx",
+      "js",
+      "jsx",
+      "json",
+      "node"
+    ]
+  },
   "dependencies": {
     "bcrypt": "3.0.2",
-    "mongoose": "5.3.11",
-    "restify": "^7.2.2",
+    "mongoose": "5.4.3",
+    "restify": "^7.5.0",
     "restify-errors": "6.1.1"
   },
   "devDependencies": {
     "@types/bcrypt": "3.0.0",
-    "@types/mongoose": "5.3.1",
-    "@types/restify": "^7.2.6",
-    "@types/restify-errors": "4.3.3"
+    "@types/jest": "23.3.12",
+    "@types/mongoose": "5.3.7",
+    "@types/restify": "^7.2.7",
+    "@types/restify-errors": "4.3.3",
+    "@types/supertest": "2.0.7",
+    "jest": "23.6.0",
+    "jest-cli": "23.6.0",
+    "supertest": "3.3.0",
+    "ts-jest": "23.10.5",
+    "ts-node": "7.0.1",
+    "typescript": "^3.2.2"
   }
 }

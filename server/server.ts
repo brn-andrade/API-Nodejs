@@ -44,12 +44,16 @@ export class Server {
                 this.application.on('restifyError', handleError)
 
             } catch (error) {
-                reject(error)
+                reject(error);
             }
         });
     }
     bootstrap(routers: Router[] = []): Promise<Server> {
         return this.initializeDb().then(() =>
-            this.initRoutes(routers).then(() => this))
+            this.initRoutes(routers).then(() => this));
+    }
+
+    shutdown() {
+        return mongoose.disconnect().then(() => this.application.close());
     }
 }
