@@ -1,12 +1,14 @@
 import 'jest';
 import * as request from 'supertest';
 
-let url: string = (<any>global).url;
+const url: string = (<any>global).url;
+const token: string = (<any>global).token;
 
 test('[GET] /users', () => {
     return request(url)
         .get('/users')
         .set('Accept-Version', '1.0.0')
+        .set('Authorization', token)
         .then(response => {
             expect(response.status).toBe(200);
             expect(response.header['api-version']).toBe('1.0.0');
@@ -17,6 +19,7 @@ test('[GET] /users', () => {
 test('[GET] /users/aaaaaaaaaaaaaa - Not Found', () => {
     return request(url)
         .get('/users/aaaaaaaaa')
+        .set('Authorization', token)
         .then(response => {
             expect(response.status).toBe(404);
         }).catch(fail);
@@ -25,6 +28,7 @@ test('[GET] /users/aaaaaaaaaaaaaa - Not Found', () => {
 test('[POST] /users', () => {
     return request(url)
         .post('/users')
+        .set('Authorization', token)
         .send({
             name: 'user1',
             email: 'user@user.com',
@@ -44,6 +48,7 @@ test('[POST] /users', () => {
 test('[PATCH] /users/:id', () => {
     return request(url)
         .post('/users')
+        .set('Authorization', token)
         .send({
             name: 'user2',
             email: 'user2@user.com',
@@ -51,6 +56,7 @@ test('[PATCH] /users/:id', () => {
         })
         .then(response => request(url)
             .patch(`/users/${response.body._id}`)
+            .set('Authorization', token)
             .send({
                 name: 'user2 - patch'
             })
@@ -67,6 +73,7 @@ test('[PATCH] /users/:id', () => {
 test('[GET] /users - v2', () => {
     return request(url)
         .post('/users')
+        .set('Authorization', token)
         .send({
             name: 'user3',
             email: 'user3@user.com',
@@ -75,6 +82,7 @@ test('[GET] /users - v2', () => {
         .then(response => request(url)
             .get(`/users?email=${response.body.email}`)
             .set('Accept-Version', '2.0.0')
+            .set('Authorization', token)
             .then(response => {
                 expect(response.status).toBe(200);
                 expect(response.header['api-version']).toBe('2.0.0');
@@ -86,6 +94,7 @@ test('[GET] /users - v2', () => {
 test('[GET] /users/:id', () => {
     return request(url)
         .post('/users')
+        .set('Authorization', token)
         .send({
             name: 'user4',
             email: 'user4@user.com',
@@ -93,6 +102,7 @@ test('[GET] /users/:id', () => {
         })
         .then(response => request(url)
             .get(`/users/${response.body._id}`)
+            .set('Authorization', token)
             .then(response => {
                 expect(response.status).toBe(200);
                 expect(response.body.name).toBe('user4');
@@ -106,6 +116,7 @@ test('[GET] /users - v3 Paginate', () => {
     return request(url)
         .get('/users')
         .set('Accept-Version', '3.0.0')
+        .set('Authorization', token)
         .then(response => {
             expect(response.status).toBe(200);
             expect(response.header['api-version']).toBe('3.0.0');
@@ -116,6 +127,7 @@ test('[GET] /users - v3 Paginate', () => {
 test('[DELETE] /users/:id', () => {
     return request(url)
         .post('/users')
+        .set('Authorization', token)
         .send({
             name: 'user5',
             email: 'user5@user.com',
@@ -123,6 +135,7 @@ test('[DELETE] /users/:id', () => {
         })
         .then(response => request(url)
             .delete(`/users/${response.body._id}`)
+            .set('Authorization', token)
             .then(response => {
                 expect(response.status).toBe(204);
             })

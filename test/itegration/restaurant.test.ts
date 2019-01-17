@@ -1,7 +1,8 @@
 import 'jest';
 import * as request from 'supertest';
 
-let url: string = (<any>global).url;
+const url: string = (<any>global).url;
+const token: string = (<any>global).token;
 
 test('[GET] /restaurants', () => {
     return request(url)
@@ -23,6 +24,7 @@ test('[GET] /restaurants/aaaaaaaaaaaa - Not Found', () => {
 test('[POST] /restaurants', () => {
     return request(url)
         .post('/restaurants')
+        .set('Authorization', token)
         .send({
             name: 'Burger House',
             menu: [{ name: 'coke', price: 4.5 }]
@@ -38,6 +40,7 @@ test('[POST] /restaurants', () => {
 test('[GET] /restaurants/:id', () => {
     return request(url)
         .post('/restaurants')
+        .set('Authorization', token)
         .send({
             name: 'Burger House',
             menu: [{ name: 'coke', price: 4.5 }]

@@ -45,10 +45,11 @@ const mocks = () => {
     //User Test
     let user = new User({
         _id: mongoose.Types.ObjectId('5c3a35c08af40f4170f230ec'),
-        name: 'user-teste',
-        email: 'user.teste@teste.com',
+        name: 'admin',
+        email: 'admin@email.com',
         password: '123456',
         cpf: '866.302.860-14',
+        rules: ['OWNER', 'ADMIN', 'USER']
     });
 
     user.save();

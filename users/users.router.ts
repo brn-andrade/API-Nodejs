@@ -31,7 +31,7 @@ class UsersRouter extends ModelRouter<User> {
             { version: '3.0.0', handler: [authorize('ADMIN', 'OWNER'), this.paginate] }
         ]));
         application.get(`${this.basePath}/:id`, [authorize('ADMIN', 'OWNER'), this.validateId, this.findById]);
-        application.post(`${this.basePath}`, [authorize('ADMIN', 'OWNER'), this.save]);
+        application.post(`${this.basePath}`, this.save);
         application.put(`${this.basePath}/:id`, [authorize('ADMIN', 'OWNER', 'USER'), this.validateId, this.replace]);
         application.patch(`${this.basePath}/:id`, [authorize('ADMIN', 'OWNER', 'USER'), this.validateId, this.update]);
         application.del(`${this.basePath}/:id`, [authorize('ADMIN', 'OWNER'), this.validateId, this.delete]);

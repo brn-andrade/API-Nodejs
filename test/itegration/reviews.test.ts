@@ -2,7 +2,8 @@ import 'jest';
 import * as request from 'supertest';
 import * as mongoose from 'mongoose';
 
-let url: string = (<any>global).url;
+const url: string = (<any>global).url;
+const token: string = (<any>global).token;
 
 test('[GET] /reviews', () => {
     return request(url)
@@ -16,6 +17,7 @@ test('[GET] /reviews', () => {
 test('[GET] /reviews/:id', () => {
     return request(url)
         .post('/reviews')
+        .set('Authorization', token)
         .send({
             date: new Date(),
             rating: 3,
@@ -46,6 +48,7 @@ test('[GET] /reviews/aaaaaaaaaaaa - Not Found', () => {
 test('[POST] /reviews', () => {
     return request(url)
         .post('/reviews')
+        .set('Authorization', token)
         .send({
             date: new Date(),
             rating: 3,

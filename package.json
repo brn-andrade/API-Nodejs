@@ -13,7 +13,8 @@
   "license": "ISC",
   "jest": {
     "globals": {
-      "url": "http://localhost:3001"
+      "url": "http://localhost:3001",
+      "token": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZG1pbkBlbWFpbC5jb20iLCJpYXQiOjE1MTYyMzkwMjJ9.HCtLeNy5-33THRqf03ayTWV0UiTNEuBgKzE-G_03d3g"
     },
     "testEnvironment": "node",
     "transform": {
