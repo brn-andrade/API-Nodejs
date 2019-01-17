@@ -9,10 +9,13 @@ export interface User extends mongoose.Document {
     password: string;
     gender?: string;
     cpf: string;
+    rules: string[];
+    matches(password: string): boolean;
+    hasRule(...rules: string[]): boolean;
 }
 
 export interface UserModel extends mongoose.Model<User> {
-    findByEmail(email: string): Promise<User>;
+    findByEmail(email: string, projection?: string): Promise<User>;
 }
 
 const userSchema = new mongoose.Schema({
@@ -45,13 +48,24 @@ const userSchema = new mongoose.Schema({
             validator: validateCPF,
             message: '{PATH}: Invalid CPF ({VALUE})'
         }
+    },
+    rules: {
+        type: [String],
+        required: false
     }
 });
 
-userSchema.statics.findByEmail = function (email: string) {
-    return this.findOne({ email }); //ES6 { email: email }
+userSchema.statics.findByEmail = function (email: string, projection: string) {
+    return this.findOne({ email }, projection); //ES6 { email: email }
 };
 
+userSchema.methods.matches = function (password: string): boolean {
+    return bcrypt.compareSync(password, this.password);
+};
+
+userSchema.methods.hasRule = function (...rules: string[]): boolean {
+    return rules.some(rule => this.rules.indexOf(rule) !== -1);
+};
 //Middlewares
 
 const hashPassword = (obj, next) => {

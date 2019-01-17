@@ -1,6 +1,8 @@
+import { authenticate } from './../security/auth.handler';
 import { ModelRouter } from '../common/model-router';
 import * as restify from 'restify';
 import { User } from './users.model';
+import { authorize } from '../security/authz.handler';
 
 class UsersRouter extends ModelRouter<User> {
 
@@ -24,15 +26,16 @@ class UsersRouter extends ModelRouter<User> {
     applyRoutes(application: restify.Server) {
 
         application.get(`${this.basePath}`, restify.plugins.conditionalHandler([
-            { version: '1.0.0', handler: this.findAll },
-            { version: '2.0.0', handler: [this.findByEmail, this.findAll] },
-            { version: '3.0.0', handler: this.paginate }
+            { version: '1.0.0', handler: [authorize('ADMIN', 'OWNER'), this.findAll] },
+            { version: '2.0.0', handler: [authorize('ADMIN', 'OWNER'), this.findByEmail, this.findAll] },
+            { version: '3.0.0', handler: [authorize('ADMIN', 'OWNER'), this.paginate] }
         ]));
-        application.get(`${this.basePath}/:id`, [this.validateId, this.findById]);
-        application.post(`${this.basePath}`, this.save);
-        application.put(`${this.basePath}/:id`, [this.validateId, this.replace]);
-        application.patch(`${this.basePath}/:id`, [this.validateId, this.update]);
-        application.del(`${this.basePath}/:id`, [this.validateId, this.delete]);
+        application.get(`${this.basePath}/:id`, [authorize('ADMIN', 'OWNER'), this.validateId, this.findById]);
+        application.post(`${this.basePath}`, [authorize('ADMIN', 'OWNER'), this.save]);
+        application.put(`${this.basePath}/:id`, [authorize('ADMIN', 'OWNER', 'USER'), this.validateId, this.replace]);
+        application.patch(`${this.basePath}/:id`, [authorize('ADMIN', 'OWNER', 'USER'), this.validateId, this.update]);
+        application.del(`${this.basePath}/:id`, [authorize('ADMIN', 'OWNER'), this.validateId, this.delete]);
+        application.post(`${this.basePath}/auth`, authenticate);
     }
 }
 
