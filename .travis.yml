@@ -1,3 +1,4 @@
+language: node_js
 stages:
   - test
 
@@ -11,6 +12,7 @@ test:
   variables:
     DB_URL: "mongodb://mongo/meatapi"
   services:
+    - docker
     - mongodb
   script:
     - npm i
