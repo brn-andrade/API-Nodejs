@@ -1,11 +1,14 @@
 language: node_js
+node_js: 
+  - "stable"
+branches:
+  only:
+  - master
 stages:
   - test
-
 cache:
-  paths:
+  directories:
     - node_modules/
-
 test:
   stage: test
   image: beevelop/nodejs-python
