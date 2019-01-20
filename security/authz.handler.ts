@@ -5,12 +5,12 @@ export const authorize: (...rules: string[]) => restify.RequestHandler = (...rul
     return (req, res, next) => {
         if ((<any>req).authenticated !== undefined && (<any>req).authenticated.hasRule(...rules)) {
             req.log.debug('User %s. - [%s.] Authozired',
-            req.authenticated._id, req.authenticated.name);
+            (<any>req).authenticated._id, (<any>req).authenticated.name);
             next();
         } else {
-            if (req.authenticated) {
+            if ((<any>req).authenticated) {
                 req.log.debug('Permission denied for %s. - [%s.] Required profiles: %j. User rules? %j.',
-                    req.authenticated._id, req.authenticated.name, rules, req.authenticated.rules);
+                (<any>req).authenticated._id, (<any>req).authenticated.name, rules, (<any>req).authenticated.rules);
             }
             next(new ForbiddenError('Permission denied'));
         }
